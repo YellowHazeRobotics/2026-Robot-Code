@@ -8,6 +8,7 @@ import static edu.wpi.first.units.Units.*;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathfindingCommand;
+
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
@@ -23,8 +24,10 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 
+import frc.robot.subsystems.ShooterSubsystem;
+
 public class RobotContainer {
-     private final SendableChooser<Command> autoChooser;
+     //private final SendableChooser<Command> autoChooser;
 
     private double MaxSpeed = 1.0 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
     private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
@@ -42,10 +45,14 @@ public class RobotContainer {
 
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
 
+    //SUBSYSTEM CREATION----------------------------
+    private final ShooterSubsystem shooterSubsystem = new ShooterSubsystem();
+
+
     public RobotContainer() {
-        autoChooser = AutoBuilder.buildAutoChooser();
+        /*autoChooser = AutoBuilder.buildAutoChooser();
         SmartDashboard.putData("Auto Chooser", autoChooser);
-        PathfindingCommand.warmupCommand().schedule();
+        PathfindingCommand.warmupCommand().schedule();*/
         configureBindings();
     }
 
@@ -84,6 +91,10 @@ public class RobotContainer {
         joystick.leftBumper().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
 
         drivetrain.registerTelemetry(logger::telemeterize);
+
+        //CONTROLS----------------
+        joystick.povRight().whileTrue(shooterSubsystem.manualForward());
+
     }
 
     public Command getAutonomousCommand() {

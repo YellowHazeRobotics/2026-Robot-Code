@@ -33,38 +33,61 @@ public class ShooterSubsystem extends SubsystemBase {
 
   private RelativeEncoder encoder_ShooterBack;
 
-  private SparkClosedLoopController feedbackController;
+  private SparkClosedLoopController feedbackControllerShooterBack;
+
+
+private SparkMax m_ShooterFront;
+  SparkMaxConfig shooterFrontConfig;
+
+  private RelativeEncoder encoder_ShooterFront;
+
+  private SparkClosedLoopController feedbackControllerShooterFront;
+
 
   public ShooterSubsystem() {
     m_ShooterBack = new SparkMax(ShooterConstants.kShooterBackMotorID, MotorType.kBrushless);
+    m_ShooterFront = new SparkMax(ShooterConstants.kShooterFrontMotorID, MotorType.kBrushless);
 
     shooterBackConfig = new SparkMaxConfig();
+    shooterFrontConfig = new SparkMaxConfig();
 
     configureMotors();
 
     encoder_ShooterBack = m_ShooterBack.getEncoder();
-    feedbackController = m_ShooterBack.getClosedLoopController();
+    feedbackControllerShooterBack = m_ShooterBack.getClosedLoopController();
+
+    encoder_ShooterFront = m_ShooterFront.getEncoder();
+    feedbackControllerShooterFront = m_ShooterFront.getClosedLoopController();
   }
 
 @SuppressWarnings("removal")
 public void configureMotors(){
     shooterBackConfig
-    .inverted(ShooterConstants.kInverted)
-    .idleMode(ShooterConstants.kIdleMode);
+    .inverted(ShooterConstants.kInverted);
+    //.idleMode(ShooterConstants.kIdleMode);
+
+    shooterBackConfig.inverted(ShooterConstants.kInverted);
 
     m_ShooterBack.configure(shooterBackConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    m_ShooterFront.configure(shooterFrontConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
   }
 
-  public Command manualForward(){
+  public Command manualForwardBack(){
     return startEnd(
-    () -> m_ShooterBack.set(0.5),
+    () -> m_ShooterBack.set(1),
     () -> m_ShooterBack.set(0));
+    }
+
+  public Command manualForwardFront(){
+    return startEnd(
+    () -> m_ShooterFront.set(1),
+    () -> m_ShooterFront.set(0));
     }
 
   /*public Command spinAlgaeMotors(double position) {
     return runOnce(() -> {
       currentTargetPosition = position;
-      feedbackController.setReference(position, ControlType.kPosition, ClosedLoopSlot.kSlot0);
+      feedbackControllerShooterBack.setReference(position, ControlType.kPosition, ClosedLoopSlot.kSlot0);
     });
   }*/
 

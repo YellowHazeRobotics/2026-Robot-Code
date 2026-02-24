@@ -93,7 +93,8 @@ public class RobotContainer {
         drivetrain.registerTelemetry(logger::telemeterize);
 
         //CONTROLS----------------
-        joystick.povRight().whileTrue(shooterSubsystem.manualForward());
+        joystick.povRight().whileTrue(shooterSubsystem.manualForwardBack());
+        joystick.povLeft().whileTrue(shooterSubsystem.manualForwardFront());
 
     }
 

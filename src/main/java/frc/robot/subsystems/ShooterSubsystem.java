@@ -62,14 +62,17 @@ private SparkMax m_ShooterFront;
 
 @SuppressWarnings("removal")
 public void configureMotors(){
-    shooterBackConfig
-    .inverted(ShooterConstants.kInverted);
+    shooterBackConfig.inverted(ShooterConstants.kBackInverted);
     //.idleMode(ShooterConstants.kIdleMode);
 
-    shooterBackConfig.inverted(ShooterConstants.kInverted);
+    m_ShooterBack.configureAsync(shooterBackConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
-    m_ShooterBack.configure(shooterBackConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-    m_ShooterFront.configure(shooterFrontConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    shooterFrontConfig.apply(shooterBackConfig);
+    shooterFrontConfig.follow(m_ShooterBack, ShooterConstants.kFrontInverted);
+
+    m_ShooterFront.configureAsync(shooterFrontConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+
+
   }
 
   public Command manualForwardBack(){
@@ -82,6 +85,12 @@ public void configureMotors(){
     return startEnd(
     () -> m_ShooterFront.set(1),
     () -> m_ShooterFront.set(0));
+    }
+
+    public Command manuallyRunForward() {
+        return run(() -> {
+            m_ShooterBack.set(1);
+        });
     }
 
   /*public Command spinAlgaeMotors(double position) {

@@ -94,7 +94,7 @@ public class RobotContainer {
 
         //CONTROLS----------------
         joystick.povRight().whileTrue(shooterSubsystem.manualForwardBack());
-        joystick.povLeft().whileTrue(shooterSubsystem.manualForwardFront());
+        joystick.x().whileTrue(shooterSubsystem.manualForwardFront());
 
     }
 

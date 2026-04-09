@@ -36,7 +36,7 @@ public class ShooterSubsystem extends SubsystemBase {
   private SparkClosedLoopController feedbackControllerShooterBack;
 
 
-private SparkMax m_ShooterFront;
+  private SparkMax m_ShooterFront;
   SparkMaxConfig shooterFrontConfig;
 
   private RelativeEncoder encoder_ShooterFront;
@@ -44,12 +44,23 @@ private SparkMax m_ShooterFront;
   private SparkClosedLoopController feedbackControllerShooterFront;
 
 
+  private SparkMax m_ShooterSecondBack;
+  SparkMaxConfig shooterSecondBackConfig;
+
+  private RelativeEncoder encoder_ShooterSecondBack;
+
+  private SparkClosedLoopController feedbackControllerShooterSecondBack;
+
+
   public ShooterSubsystem() {
     m_ShooterBack = new SparkMax(ShooterConstants.kShooterBackMotorID, MotorType.kBrushless);
     m_ShooterFront = new SparkMax(ShooterConstants.kShooterFrontMotorID, MotorType.kBrushless);
+    m_ShooterSecondBack = new SparkMax(ShooterConstants.kShooterSecondBackMotorID, MotorType.kBrushless);
+
 
     shooterBackConfig = new SparkMaxConfig();
     shooterFrontConfig = new SparkMaxConfig();
+    shooterSecondBackConfig = new SparkMaxConfig();
 
     configureMotors();
 
@@ -58,21 +69,31 @@ private SparkMax m_ShooterFront;
 
     encoder_ShooterFront = m_ShooterFront.getEncoder();
     feedbackControllerShooterFront = m_ShooterFront.getClosedLoopController();
+
+    encoder_ShooterSecondBack = m_ShooterSecondBack.getEncoder();
+    feedbackControllerShooterSecondBack = m_ShooterSecondBack.getClosedLoopController();
   }
 
 @SuppressWarnings("removal")
 public void configureMotors(){
-    shooterBackConfig.inverted(ShooterConstants.kBackInverted);
+    //shooterBackConfig.inverted(ShooterConstants.kBackInverted);
     //.idleMode(ShooterConstants.kIdleMode);
-
-    m_ShooterBack.configureAsync(shooterBackConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-
-    shooterFrontConfig.apply(shooterBackConfig);
-    shooterFrontConfig.follow(m_ShooterBack, ShooterConstants.kFrontInverted);
-
+    //m_ShooterBack.configureAsync(shooterBackConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    
+    //shooterFrontConfig.apply(shooterBackConfig);
+    //shooterFrontConfig.follow(m_ShooterBack, ShooterConstants.kFrontInverted);
+    shooterFrontConfig.inverted(ShooterConstants.kFrontInverted);
     m_ShooterFront.configureAsync(shooterFrontConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
 
+    shooterSecondBackConfig.follow(m_ShooterFront, ShooterConstants.kSecondBackInverted);
+    shooterSecondBackConfig.inverted(ShooterConstants.kSecondBackInverted);
+    m_ShooterSecondBack.configureAsync(shooterSecondBackConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+
+    shooterBackConfig.follow(m_ShooterFront, ShooterConstants.kBackInverted);
+    shooterBackConfig.inverted(ShooterConstants.kBackInverted);
+    m_ShooterBack.configureAsync(shooterBackConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    
   }
 
   public Command manualForwardBack(){
@@ -87,18 +108,18 @@ public void configureMotors(){
     () -> m_ShooterFront.set(0));
     }
 
+  public Command manualSecondBack(){
+    return startEnd(
+    () -> m_ShooterFront.set(1),
+    () -> m_ShooterFront.set(0));
+    }
+
     public Command manuallyRunForward() {
         return run(() -> {
             m_ShooterBack.set(1);
         });
     }
 
-  /*public Command spinAlgaeMotors(double position) {
-    return runOnce(() -> {
-      currentTargetPosition = position;
-      feedbackControllerShooterBack.setReference(position, ControlType.kPosition, ClosedLoopSlot.kSlot0);
-    });
-  }*/
 
 @Override
 public void periodic() {

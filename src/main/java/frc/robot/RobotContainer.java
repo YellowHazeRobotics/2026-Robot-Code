@@ -96,6 +96,10 @@ public class RobotContainer {
         joystick.povRight().whileTrue(shooterSubsystem.manualForwardBack());
         joystick.x().whileTrue(shooterSubsystem.manualForwardFront());
         joystick.povLeft().whileTrue(shooterSubsystem.manualSecondBack());
+        joystick.y().whileTrue(shooterSubsystem.manualShooterSecondBack());
+
+        joystick.b().whileTrue(shooterSubsystem.runKrakenBridge(1));
+
 
     }
 

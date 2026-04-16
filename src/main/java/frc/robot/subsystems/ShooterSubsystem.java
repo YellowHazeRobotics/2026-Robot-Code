@@ -25,6 +25,11 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.MAXMotionConfig.MAXMotionPositionMode;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+import com.ctre.phoenix6.configs.Pigeon2Configurator;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.configs.TalonFXConfigurator;
+import com.ctre.phoenix6.controls.DutyCycleOut;
+import com.ctre.phoenix6.hardware.TalonFX;
 
 public class ShooterSubsystem extends SubsystemBase {
   
@@ -51,12 +56,17 @@ public class ShooterSubsystem extends SubsystemBase {
 
   private SparkClosedLoopController feedbackControllerShooterSecondBack;
 
+  final TalonFX krakenBridge;
+  final DutyCycleOut krakenBridge_request;
+
 
   public ShooterSubsystem() {
     m_ShooterBack = new SparkMax(ShooterConstants.kShooterBackMotorID, MotorType.kBrushless);
     m_ShooterFront = new SparkMax(ShooterConstants.kShooterFrontMotorID, MotorType.kBrushless);
     m_ShooterSecondBack = new SparkMax(ShooterConstants.kShooterSecondBackMotorID, MotorType.kBrushless);
 
+    krakenBridge = new TalonFX(21);
+    krakenBridge_request = new DutyCycleOut(0.0);
 
     shooterBackConfig = new SparkMaxConfig();
     shooterFrontConfig = new SparkMaxConfig();
@@ -101,6 +111,18 @@ public void configureMotors(){
     () -> m_ShooterBack.set(1),
     () -> m_ShooterBack.set(0));
     }
+
+
+public Command runAxle(double speed) {
+  return run(() -> krakenBridge.setControl(krakenBridge_request.withOutput(speed))).finallyDo(() -> krakenBridge.setControl(krakenBridge_request.withOutput(0)));
+  }
+
+  public Command manualShooterSecondBack(){
+    return startEnd(
+    () -> m_ShooterSecondBack.set(1),
+    () -> m_ShooterSecondBack.set(0));
+    }
+
 
   public Command manualForwardFront(){
     return startEnd(

@@ -17,6 +17,10 @@ public final class Constants {
     public static class IntakeConstants{
         public static final IdleMode kIdleMode = IdleMode.kBrake;
         public static final boolean kInverted = true;
+        public static final int kIntakeWristMotorID = 23;
+        public static final int kIntakeMotorID = 24;
+        public static final boolean kWristInverted = false;
+        public static final boolean kIntakeInverted = false;
     }
 
 }

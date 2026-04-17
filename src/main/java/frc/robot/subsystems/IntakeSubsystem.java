@@ -32,46 +32,51 @@ public class IntakeSubsystem extends SubsystemBase {
   SparkMaxConfig intakeWristConfig;
 
   private RelativeEncoder encoder_intakeWrist;
-
   private SparkClosedLoopController feedbackControllerintakeWrist;
+
+
+  private SparkMax m_intake;
+  SparkMaxConfig intakeConfig;
 
 
 
   public IntakeSubsystem() {
     m_intakeWrist = new SparkMax(IntakeConstants.kintakeWristMotorID, MotorType.kBrushless);
+    m_intake = new SparkMax(IntakeConstants.kintakeMotorID, MotorType.kBrushless);
 
     intakeWristConfig = new SparkMaxConfig();
+    intake = new SparkMaxConfig();
 
     configureMotors();
 
-    encoder_intakeWrist = m_intakeWrist.getEncoder();
-    feedbackControllerintakeWrist = m_intakeWrist.getClosedLoopController();
 
   }
 
 @SuppressWarnings("removal")
 public void configureMotors(){
-    intakeWristConfig
-    .inverted(IntakeConstants.kInverted);
-    //.idleMode(ShooterConstants.kIdleMode);
-
     intakeWristConfig.inverted(IntakeConstants.kInverted);
 
+    intakeConfig.inverted(IntakeConstants.kInverted);
+
     m_intakeWrist.configure(intakeWristConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    m_intake.configure(intakeConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+
+
   }
 
-  public Command manualForwardBack(){
+  public Command manualForwardIntakeWrist(){
     return startEnd(
     () -> m_intakeWrist.set(1),
     () -> m_intakeWrist.set(0));
     }
 
-  /*public Command spinAlgaeMotors(double position) {
-    return runOnce(() -> {
-      currentTargetPosition = position;
-      feedbackControllerintakeWrist.setReference(position, ControlType.kPosition, ClosedLoopSlot.kSlot0);
-    });
-  }
+
+  public Command manualForwardIntake(){
+    return startEnd(
+    () -> m_intake.set(1),
+    () -> m_intake.set(0));
+    }
+
 
 @Override
 public void periodic() {

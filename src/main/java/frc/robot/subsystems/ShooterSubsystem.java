@@ -113,7 +113,7 @@ public void configureMotors(){
     }
 
 
-public Command runAxle(double speed) {
+public Command runKrakenBridge(double speed) {
   return run(() -> krakenBridge.setControl(krakenBridge_request.withOutput(speed))).finallyDo(() -> krakenBridge.setControl(krakenBridge_request.withOutput(0)));
   }
 

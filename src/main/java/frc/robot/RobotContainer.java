@@ -25,6 +25,7 @@ import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 
 import frc.robot.subsystems.ShooterSubsystem;
+//import frc.robot.subsystems.IntakeSubsystem;
 
 public class RobotContainer {
      //private final SendableChooser<Command> autoChooser;
@@ -47,6 +48,7 @@ public class RobotContainer {
 
     //SUBSYSTEM CREATION----------------------------
     private final ShooterSubsystem shooterSubsystem = new ShooterSubsystem();
+    //private final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
 
 
     public RobotContainer() {
@@ -98,7 +100,8 @@ public class RobotContainer {
         joystick.povLeft().whileTrue(shooterSubsystem.manualSecondBack());
         joystick.y().whileTrue(shooterSubsystem.manualShooterSecondBack());
 
-        joystick.b().whileTrue(shooterSubsystem.runKrakenBridge(1));
+        /*//joystick.b().whileTrue(shooterSubsystem.runKrakenBridge(1));
+        joystick.b().whileTrue(intakeSubsystem.manualForwardIntake());*/
 
 
     }

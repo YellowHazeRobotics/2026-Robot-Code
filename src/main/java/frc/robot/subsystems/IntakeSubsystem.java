@@ -1,8 +1,8 @@
 // Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
-/*
-package frc.robot.subsystems;
+
+/*package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -41,11 +41,11 @@ public class IntakeSubsystem extends SubsystemBase {
 
 
   public IntakeSubsystem() {
-    m_intakeWrist = new SparkMax(IntakeConstants.kintakeWristMotorID, MotorType.kBrushless);
-    m_intake = new SparkMax(IntakeConstants.kintakeMotorID, MotorType.kBrushless);
+    //m_intakeWrist = new SparkMax(IntakeConstants.kIntakeWristMotorID, MotorType.kBrushless);
+    m_intake = new SparkMax(IntakeConstants.kIntakeMotorID, MotorType.kBrushless);
 
-    intakeWristConfig = new SparkMaxConfig();
-    intake = new SparkMaxConfig();
+    //intakeWristConfig = new SparkMaxConfig();
+    intakeConfig = new SparkMaxConfig();
 
     configureMotors();
 
@@ -54,17 +54,17 @@ public class IntakeSubsystem extends SubsystemBase {
 
 @SuppressWarnings("removal")
 public void configureMotors(){
-    intakeWristConfig.inverted(IntakeConstants.kInverted);
+    //intakeWristConfig.inverted(IntakeConstants.kWristInverted);
 
-    intakeConfig.inverted(IntakeConstants.kInverted);
+    intakeConfig.inverted(IntakeConstants.kIntakeInverted);
 
-    m_intakeWrist.configure(intakeWristConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    //m_intakeWrist.configure(intakeWristConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     m_intake.configure(intakeConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
 
   }
 
-  public Command manualForwardIntakeWrist(){
+  /*public Command manualForwardIntakeWrist(){
     return startEnd(
     () -> m_intakeWrist.set(1),
     () -> m_intakeWrist.set(0));
@@ -73,7 +73,7 @@ public void configureMotors(){
 
   public Command manualForwardIntake(){
     return startEnd(
-    () -> m_intake.set(1),
+    () -> m_intake.set(0.8),
     () -> m_intake.set(0));
     }
 
@@ -85,5 +85,4 @@ public void periodic() {
 @Override
 public void simulationPeriodic() {
   }
-}
-  */
+}*/
